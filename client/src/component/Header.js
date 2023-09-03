@@ -12,7 +12,7 @@ function Header() {
         <Button sx={{ color: "white", textDecoration: "none" }}>chat</Button>
       </Link>
       <Link to={`/room/${roomId}`}>
-        <Button sx={{ color: "white", textDecoration: "none" }}>chat</Button>
+        <Button sx={{ color: "white", textDecoration: "none" }}>Room</Button>
       </Link>
     </Card>
   );

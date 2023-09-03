@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { io } from "socket.io-client";
 
 function ChatWindow() {
   const [socket, setSocket] = useState(null);
@@ -35,9 +34,7 @@ function ChatWindow() {
       }, 1000)
     );
   };
-  useEffect(() => {
-    setSocket(io("http://localhost:4000"));
-  }, []);
+ 
   useEffect(() => {
     if (!socket) return;
     if (socket) {
