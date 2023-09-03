@@ -11,6 +11,7 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { io } from "socket.io-client";
+
 function ChatWindow() {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
