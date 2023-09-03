@@ -1,11 +1,19 @@
-import { Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import ChatWindow from "./component/ChatWindow";
+import { Outlet } from "react-router-dom";
+import Header from "./component/Header";
 
 function App() {
   return (
     <div>
       <Container>
-        <ChatWindow />
+        {/* <ChatWindow /> */}
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Header />
+       
+        <Outlet />
+        
+    </Box>
       </Container>
     </div>
   );
