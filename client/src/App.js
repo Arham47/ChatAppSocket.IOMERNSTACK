@@ -20,7 +20,7 @@ useEffect(() => {
        
         <Header />
        
-        <Outlet />
+        <Outlet context={{socket}} />
         
       </Container>
         </Box> 

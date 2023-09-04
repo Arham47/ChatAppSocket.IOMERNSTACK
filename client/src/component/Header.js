@@ -5,14 +5,14 @@ function Header() {
   const roomId = uuidv4();
   return (
     <Card sx={{ marginTop: 5, backgroundColor: "gray" }} raised>
-      <Link to={"/"}>
-        <Button sx={{ color: "white", textDecoration: "none" }}>home</Button>
+      <Link style={{textDecoration:"none"}} to={"/"}>
+        <Button sx={{ color: "white"}}>home</Button>
       </Link>
-      <Link to={"/chats"}>
-        <Button sx={{ color: "white", textDecoration: "none" }}>chat</Button>
+      <Link style={{textDecoration:"none"}} to={"/chats"}>
+        <Button sx={{ color: "white"}}>chat</Button>
       </Link>
-      <Link to={`/room/${roomId}`}>
-        <Button sx={{ color: "white", textDecoration: "none" }}>Room</Button>
+      <Link style={{textDecoration:"none"}} to={`/room/${roomId}`}>
+        <Button sx={{ color: "white"}}>Room</Button>
       </Link>
     </Card>
   );

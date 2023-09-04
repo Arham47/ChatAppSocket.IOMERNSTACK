@@ -10,13 +10,15 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { useOutletContext, useParams } from "react-router-dom";
 
 function ChatWindow() {
-  const [socket, setSocket] = useState(null);
+ const {socket}= useOutletContext()
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [typing, setTyping] = useState(false);
   const [typingTimout, setTypingTimeout] = useState(null);
+  const {roomId}=useParams()
   const handleForm = (e) => {
     e.preventDefault();
     socket.emit("send-message", { message });
@@ -26,7 +28,7 @@ function ChatWindow() {
   };
   const handleInput = (e) => {
     setMessage(e.target.value);
-    socket.emit("typing-started");
+    socket.emit("typing-started",{roomId});
     if (typingTimout) clearTimeout(typing);
     setTypingTimeout(
       setTimeout(() => {
@@ -61,7 +63,9 @@ function ChatWindow() {
         }}
       >
         {" "}
-        <Box sx={{ marginBottom: 5 }}>
+      <Box sx={{ marginBottom: 5 }}>
+      {roomId &&  <Typography> this is our room ID {roomId}</Typography>}
+
           {chat.map((msg) => {
             return (
               <Typography

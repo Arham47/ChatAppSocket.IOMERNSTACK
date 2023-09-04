@@ -1,14 +1,19 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom"
-import {io} from "socket.io-client"
+import { useOutletContext, useParams } from "react-router-dom"
+import ChatWindow from "../component/ChatWindow"
+import { Typography } from "@mui/material";
+
 function Room() {
     const params = useParams();
-    const socket=io()
+    const {socket}=useOutletContext()
     useEffect(() => {
+        if(!socket)return
           socket.emit("join-room",{roomId:params.roomId})
-    },[])
+    },[socket])
   return (
-    <div>Room</div>
+    <div>
+      <ChatWindow/>
+    </div>
   )
 }
 
