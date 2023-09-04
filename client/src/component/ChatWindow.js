@@ -21,7 +21,7 @@ function ChatWindow() {
   const {roomId}=useParams()
   const handleForm = (e) => {
     e.preventDefault();
-    socket.emit("send-message", { message });
+    socket.emit("send-message", { message,roomId });
     setChat((prev) => [...prev, { message: message, recieved: false }]);
 
     setMessage("");
@@ -32,7 +32,7 @@ function ChatWindow() {
     if (typingTimout) clearTimeout(typing);
     setTypingTimeout(
       setTimeout(() => {
-        socket.emit("typing-stoped");
+        socket.emit("typing-stoped",{roomId});
       }, 1000)
     );
   };

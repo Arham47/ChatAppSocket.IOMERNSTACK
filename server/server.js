@@ -4,6 +4,7 @@ import { Server } from "socket.io"
 import path from 'path';
 import cors from "cors"
 const app = express()
+import socket from "./Socket/Routes.js"
 
 const PORT = 4000;
 const __dirname = path
@@ -21,29 +22,36 @@ app.get("/",(req, res)=> {
    res.sendFile(__dirname,)
 })
 
-io.on("connection", (socket) => {
-    socket.on("send-message", (data) => {
-        socket.broadcast.emit("message-from-server", data);
-   })
-    socket.on("typing-started", ({ roomId }) => {
-        let skt = socket.broadcast
+io.on("connection", socket);
+
+// io.on("connection", (socket) => {
+//     socket.on("send-message", ({ message, roomId }) => {
+//         let skt = socket.broadcast
       
-        skt = roomId ? skt.to(roomId) : skt;
+//         skt = roomId ? skt.to(roomId) : skt;
+//         skt.emit("message-from-server", {message});
+//    })
+//     socket.on("typing-started", ({ roomId }) => {
+//         let skt = socket.broadcast
+      
+//         skt = roomId ? skt.to(roomId) : skt;
 
-        skt.emit("typing-started-from-server");
-   })
-    socket.on("typing-stoped", () => {
-        socket.broadcast.emit("typing-stoped-from-server");
-    })
-    socket.on("join-room", ({roomId}) => {
-        socket.join(roomId)
-        console.log("room joined")
-   })
-   socket.on("disconnect", (socket) => {
-      console.log("user Disconnected")
-   })
-})
-
+//         skt.emit("typing-started-from-server");
+//    })
+//     socket.on("typing-stoped", ({ roomId }) => {
+//         let skt = socket.broadcast
+      
+//         skt = roomId ? skt.to(roomId) : skt;
+//         skt.emit("typing-stoped-from-server");
+//     })
+//     socket.on("join-room", ({roomId}) => {
+//         socket.join(roomId)
+//         console.log("room joined")
+//    })
+//    socket.on("disconnect", (socket) => {
+//       console.log("user Disconnected")
+//    })
+// })
 httpServer.listen(PORT, () => {
     console.log("server is running on localhost:4000");
 })
