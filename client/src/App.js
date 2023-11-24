@@ -18,7 +18,7 @@ useEffect(() => {
       <Container>
         {/* <ChatWindow /> */}
        
-        <Header />
+          <Header socket={socket} />
        
         <Outlet context={{socket}} />
         

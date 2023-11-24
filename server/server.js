@@ -1,57 +1,64 @@
-import express from "express"
-import http from "http"
+import express from "express";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
 import { Server } from "socket.io"
-import path from 'path';
-import cors from "cors"
-const app = express()
-import socket from "./Socket/Routes.js"
+import http from "http"
+import socket from "./Socket/SocketRoutes/Routes.js"
 
-const PORT = 4000;
-const __dirname = path
-app.use(cors({
-    origin:"http://localhost3000"
-}))
 
+import {
+  fileURLToPath
+} from "url";
+import AdminRoutes from "./Routes/AdminRoutes.js"
+import BrainRoutes from "./Routes/BrainRoute.js"
+import ClientRoutes from "./Routes/ClientRoutes.js"
+import ChatRoutes from "./Routes/ChatRoutes.js"
+import ProjectRoutes from "./Routes/ProjectRoutes.js"
+const __filename = fileURLToPath(
+    import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config();
+const app = express();
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
 const httpServer = http.createServer(app)
 const io = new Server(httpServer, {
     cors: {
         origin:["http://localhost:3000"]
     }
 });
-app.get("/",(req, res)=> {
-   res.sendFile(__dirname,)
-})
+
 
 io.on("connection", socket);
 
-// io.on("connection", (socket) => {
-//     socket.on("send-message", ({ message, roomId }) => {
-//         let skt = socket.broadcast
-      
-//         skt = roomId ? skt.to(roomId) : skt;
-//         skt.emit("message-from-server", {message});
-//    })
-//     socket.on("typing-started", ({ roomId }) => {
-//         let skt = socket.broadcast
-      
-//         skt = roomId ? skt.to(roomId) : skt;
+app.use("/admin", AdminRoutes);
+app.use("/brain", BrainRoutes )
+app.use("/client", ClientRoutes);
+app.use("/chat", ChatRoutes);
+app.use("/project", ProjectRoutes);
 
-//         skt.emit("typing-started-from-server");
-//    })
-//     socket.on("typing-stoped", ({ roomId }) => {
-//         let skt = socket.broadcast
-      
-//         skt = roomId ? skt.to(roomId) : skt;
-//         skt.emit("typing-stoped-from-server");
-//     })
-//     socket.on("join-room", ({roomId}) => {
-//         socket.join(roomId)
-//         console.log("room joined")
-//    })
-//    socket.on("disconnect", (socket) => {
-//       console.log("user Disconnected")
-//    })
-// })
-httpServer.listen(PORT, () => {
-    console.log("server is running on localhost:4000");
-})
+
+const PORT = process.env.PORT || 5000;
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(process.env.CONNECTION_URL, {})
+  .then(() =>
+  httpServer.listen(4000, () =>
+      console.log(`server is running on localhost:${4000}`)
+    )
+  )
+  .catch((err) => console.log(err));
+

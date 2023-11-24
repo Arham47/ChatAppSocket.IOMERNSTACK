@@ -7,9 +7,10 @@ function Room() {
     const params = useParams();
     const {socket}=useOutletContext()
     useEffect(() => {
-        if(!socket)return
+        if(!socket) return
           socket.emit("join-room",{roomId:params.roomId})
-    },[socket])
+    }, [socket])
+  
   return (
     <div>
       <ChatWindow/>

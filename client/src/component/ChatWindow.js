@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -10,6 +9,8 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+
 import { useOutletContext, useParams } from "react-router-dom";
 
 function ChatWindow() {
@@ -18,7 +19,8 @@ function ChatWindow() {
   const [chat, setChat] = useState([]);
   const [typing, setTyping] = useState(false);
   const [typingTimout, setTypingTimeout] = useState(null);
-  const {roomId}=useParams()
+  const { roomId } = useParams()
+  const fileRef=useRef(null)
   const handleForm = (e) => {
     e.preventDefault();
     socket.emit("send-message", { message,roomId });
@@ -36,7 +38,26 @@ function ChatWindow() {
       }, 1000)
     );
   };
- 
+  const selectFile = ()=>{
+
+    fileRef.current.click();
+  }
+  const fileSelected = (e)=>{
+
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const data = reader.result;
+      socket.emit("upload", { data, roomId });
+      setChat((prev) => [
+        ...prev,
+        { message: reader.result, received: false, type: "image" },
+      ]);
+    }; 
+  }
+
   useEffect(() => {
     if (!socket) return;
     if (socket) {
@@ -49,6 +70,14 @@ function ChatWindow() {
       socket.on("typing-stoped-from-server", () => {
         setTyping(false);
       });
+      
+    socket.on("uploaded", (data) => {
+      console.log(data);
+      setChat((prev) => [
+        ...prev,
+        { message: data.buffer, received: true, type: "image" },
+      ]);
+    });
     }
   }, [socket]);
   return (
@@ -68,6 +97,7 @@ function ChatWindow() {
 
           {chat.map((msg) => {
             return (
+              msg.type==='image'?<img src={msg.message} width={200} alt="imge"/>:
               <Typography
                 key={msg.message}
                 sx={{ textAlign: msg.recieved && "right" }}
@@ -95,6 +125,20 @@ function ChatWindow() {
             onChange={handleInput}
             endAdornment={
               <InputAdornment position="end">
+                <input
+                  onChange={fileSelected}
+                  ref={fileRef}
+                  type="file"
+                  style={{ display: "none" }}
+                />
+                <IconButton
+                  type="button"
+                  edge="end"
+                  sx={{ marginRight: 1 }}
+                  onClick={selectFile}
+                >
+                  <AttachFileIcon />
+                </IconButton>
                 <IconButton type="submit" edge="end">
                   <SendIcon />
                 </IconButton>
